@@ -1,0 +1,25 @@
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongo
+    networks:
+      - appNetwork
+  mongo:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - appNetwork
+
+networks:
+  appNetwork:
+    driver: bridge
+
+volumes:
+  mongo_data:
