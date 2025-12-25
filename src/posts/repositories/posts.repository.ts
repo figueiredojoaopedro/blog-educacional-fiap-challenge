@@ -1,0 +1,10 @@
+import { IPosts } from "../schemas/models/posts.interface";
+
+export interface PostsRepository {
+  getAllPosts(limit: number, page: number): Promise<IPosts[]>;
+  getPost(postId: string): Promise<IPosts | null>;
+  createPost(post: IPosts): Promise<IPosts>;
+  updatePost(postId: string, title: string, content: string): Promise<IPosts | null>;
+  deletePost(postId: string): Promise<void>;
+  searchPosts(query: string): Promise<IPosts[]>;
+}

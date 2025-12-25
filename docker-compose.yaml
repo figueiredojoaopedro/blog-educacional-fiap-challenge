@@ -6,6 +6,8 @@ services:
       - 3000:3000
     depends_on:
       - mongo
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/blog
     networks:
       - appNetwork
   mongo:
