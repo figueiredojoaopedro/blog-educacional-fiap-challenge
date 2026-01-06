@@ -10,13 +10,26 @@ exports.PostsModule = void 0;
 const common_1 = require("@nestjs/common");
 const posts_controller_1 = require("./controllers/posts.controller");
 const posts_service_1 = require("./services/posts.service");
+const mongoose_1 = require("@nestjs/mongoose");
+const posts_schema_1 = require("./schemas/posts.schema");
+const posts_mongoose_repository_1 = require("./repositories/mongoose/posts.mongoose.repository");
+const posts_repository_1 = require("./repositories/posts.repository");
 let PostsModule = class PostsModule {
 };
 exports.PostsModule = PostsModule;
 exports.PostsModule = PostsModule = __decorate([
     (0, common_1.Module)({
+        imports: [
+            mongoose_1.MongooseModule.forFeature([{ name: posts_schema_1.Post.name, schema: posts_schema_1.PostSchema }])
+        ],
         controllers: [posts_controller_1.PostsController],
-        providers: [posts_service_1.PostsService]
+        providers: [
+            posts_service_1.PostsService,
+            {
+                provide: posts_repository_1.PostsRepository,
+                useClass: posts_mongoose_repository_1.PostsMongooseRepository
+            }
+        ]
     })
 ], PostsModule);
 //# sourceMappingURL=posts.module.js.map

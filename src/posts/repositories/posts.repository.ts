@@ -1,10 +1,14 @@
-import { IPosts } from "../schemas/models/posts.interface";
+import { IPosts } from '../schemas/models/posts.interface';
 
-export interface PostsRepository {
-  getAllPosts(limit: number, page: number): Promise<IPosts[]>;
-  getPost(postId: string): Promise<IPosts | null>;
-  createPost(post: IPosts): Promise<IPosts>;
-  updatePost(postId: string, title: string, content: string): Promise<IPosts | null>;
-  deletePost(postId: string): Promise<void>;
-  searchPosts(query: string): Promise<IPosts[]>;
+export abstract class PostsRepository {
+  abstract getAllPosts(limit: number, page: number): Promise<IPosts[]>;
+  abstract getPost(postId: string): Promise<IPosts | null>;
+  abstract createPost(post: IPosts): Promise<IPosts>;
+  abstract updatePost(
+    postId: string,
+    title: string,
+    content: string,
+  ): Promise<IPosts | null>;
+  abstract deletePost(postId: string): Promise<void>;
+  abstract searchPosts(query: string): Promise<IPosts[]>;
 }

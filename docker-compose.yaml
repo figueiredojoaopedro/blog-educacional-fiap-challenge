@@ -3,17 +3,17 @@ services:
     build:
       context: .
     ports:
-      - 3000:3000
+      - ${APP_PORT}:${APP_PORT}
     depends_on:
       - mongo
     environment:
-      - MONGODB_URI=mongodb://mongo:27017/blog
+      - MONGODB_URI=${MONGO_URL}
     networks:
       - appNetwork
   mongo:
     image: mongo:latest
     ports:
-      - 27017:27017
+      - ${MONGO_PORT}:${MONGO_PORT}
     volumes:
       - mongo_data:/data/db
     networks:

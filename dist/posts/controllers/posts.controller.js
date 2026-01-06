@@ -14,70 +14,93 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PostsController = void 0;
 const common_1 = require("@nestjs/common");
+const posts_service_1 = require("../services/posts.service");
+const create_post_dto_1 = require("../dto/create-post.dto");
+const update_post_dto_1 = require("../dto/update-post.dto");
 let PostsController = class PostsController {
-    getPosts() {
-        return [];
+    postsService;
+    constructor(postsService) {
+        this.postsService = postsService;
     }
-    getPost(id) {
-        return {};
+    async getPosts(limit = 10, page = 1) {
+        return this.postsService.getAllPosts(Number(limit), Number(page));
     }
-    getBySeach(word) {
-        return [];
+    async searchPosts(query) {
+        return this.postsService.searchPosts(query);
     }
-    post(body) {
-        return 1;
+    async getPost(id) {
+        const post = await this.postsService.getPost(id);
+        if (!post) {
+            throw new common_1.NotFoundException(`Post with ID "${id}" not found`);
+        }
+        return post;
     }
-    put(id, body) {
-        return 2;
+    async createPost(createPostDto) {
+        return this.postsService.createPost({
+            title: createPostDto.title,
+            content: createPostDto.content,
+            author: createPostDto.author,
+        });
     }
-    delete(id) {
-        return true;
+    async updatePost(id, updatePostDto) {
+        const updatedPost = await this.postsService.updatePost(id, updatePostDto.title, updatePostDto.content);
+        if (!updatedPost) {
+            throw new common_1.NotFoundException(`Post with ID "${id}" not found`);
+        }
+        return updatedPost;
+    }
+    async deletePost(id) {
+        await this.postsService.deletePost(id);
+        return { message: `Post with ID "${id}" has been deleted` };
     }
 };
 exports.PostsController = PostsController;
 __decorate([
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Query)('limit')),
+    __param(1, (0, common_1.Query)('page')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
 ], PostsController.prototype, "getPosts", null);
+__decorate([
+    (0, common_1.Get)('search'),
+    __param(0, (0, common_1.Query)('q')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], PostsController.prototype, "searchPosts", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], PostsController.prototype, "getPost", null);
-__decorate([
-    (0, common_1.Get)(':word'),
-    __param(0, (0, common_1.Param)('word')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
-], PostsController.prototype, "getBySeach", null);
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
-], PostsController.prototype, "post", null);
+    __metadata("design:paramtypes", [create_post_dto_1.CreatePostDto]),
+    __metadata("design:returntype", Promise)
+], PostsController.prototype, "createPost", null);
 __decorate([
     (0, common_1.Put)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
-    __metadata("design:returntype", void 0)
-], PostsController.prototype, "put", null);
+    __metadata("design:paramtypes", [String, update_post_dto_1.UpdatePostDto]),
+    __metadata("design:returntype", Promise)
+], PostsController.prototype, "updatePost", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
-], PostsController.prototype, "delete", null);
+    __metadata("design:returntype", Promise)
+], PostsController.prototype, "deletePost", null);
 exports.PostsController = PostsController = __decorate([
-    (0, common_1.Controller)('posts')
+    (0, common_1.Controller)('posts'),
+    __metadata("design:paramtypes", [posts_service_1.PostsService])
 ], PostsController);
 //# sourceMappingURL=posts.controller.js.map

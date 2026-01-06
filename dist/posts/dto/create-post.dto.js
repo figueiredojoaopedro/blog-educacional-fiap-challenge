@@ -9,28 +9,27 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PostSchema = exports.Post = void 0;
-const mongoose_1 = require("@nestjs/mongoose");
-let Post = class Post {
+exports.CreatePostDto = void 0;
+const class_validator_1 = require("class-validator");
+class CreatePostDto {
     title;
     content;
     author;
-};
-exports.Post = Post;
+}
+exports.CreatePostDto = CreatePostDto;
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], Post.prototype, "title", void 0);
+], CreatePostDto.prototype, "title", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], Post.prototype, "content", void 0);
+], CreatePostDto.prototype, "content", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], Post.prototype, "author", void 0);
-exports.Post = Post = __decorate([
-    (0, mongoose_1.Schema)({ timestamps: true })
-], Post);
-exports.PostSchema = mongoose_1.SchemaFactory.createForClass(Post);
-//# sourceMappingURL=posts.schema.js.map
+], CreatePostDto.prototype, "author", void 0);
+//# sourceMappingURL=create-post.dto.js.map
