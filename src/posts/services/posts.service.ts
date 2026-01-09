@@ -4,7 +4,9 @@ import { IPosts } from '../schemas/models/posts.interface';
 
 @Injectable()
 export class PostsService {
-  constructor(@Inject(PostsRepository) private readonly postsRepository: PostsRepository) {}
+  constructor(
+    @Inject(PostsRepository) private readonly postsRepository: PostsRepository,
+  ) {}
 
   async getAllPosts(limit: number, page: number): Promise<IPosts[]> {
     return this.postsRepository.getAllPosts(limit, page);
@@ -15,10 +17,17 @@ export class PostsService {
   }
 
   async createPost(post: IPosts): Promise<IPosts> {
-    return this.postsRepository.createPost({ ...post, createdAt: new Date().toISOString() });
+    return this.postsRepository.createPost({
+      ...post,
+      createdAt: new Date().toISOString(),
+    });
   }
 
-  async updatePost(postId: string, title: string, content: string): Promise<IPosts | null> {
+  async updatePost(
+    postId: string,
+    title: string,
+    content: string,
+  ): Promise<IPosts | null> {
     return this.postsRepository.updatePost(postId, title, content);
   }
 

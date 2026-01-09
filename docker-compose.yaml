@@ -1,4 +1,12 @@
 services:
+  mongo:
+    image: mongo:latest
+    ports:
+      - ${MONGO_PORT}:${MONGO_PORT}
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - appNetwork
   app:
     build:
       context: .
@@ -8,14 +16,8 @@ services:
       - mongo
     environment:
       - MONGODB_URI=${MONGO_URL}
-    networks:
-      - appNetwork
-  mongo:
-    image: mongo:latest
-    ports:
-      - ${MONGO_PORT}:${MONGO_PORT}
-    volumes:
-      - mongo_data:/data/db
+      - MONGO_HOST=${MONGO_HOST}
+      - MONGO_PORT=${MONGO_PORT}
     networks:
       - appNetwork
 

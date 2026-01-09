@@ -82,8 +82,8 @@ describe('PostsController', () => {
     it('should create a new post', async () => {
       const createDto: CreatePostDto = { title: 'New Post', content: 'New content', author: 'New Author' };
       const result = await controller.createPost(createDto);
-      expect(result).toEqual({ title: createDto.title, content: createDto.content, id: '2' });
-      expect(service.createPost).toHaveBeenCalledWith({ title: createDto.title, content: createDto.content });
+      expect(result).toEqual({ ...createDto, id: '2' });
+      expect(service.createPost).toHaveBeenCalledWith(createDto);
     });
   });
 

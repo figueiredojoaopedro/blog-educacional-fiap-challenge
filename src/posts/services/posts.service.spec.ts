@@ -15,14 +15,18 @@ describe('PostsService', () => {
 
   const mockPostsRepository = {
     getAllPosts: jest.fn(() => Promise.resolve([mockPost])),
-    getPost: jest.fn((id: string) => Promise.resolve(id === '1' ? mockPost : null)),
-    createPost: jest.fn((post: IPosts) => Promise.resolve({ ...post, id: '2' })),
+    getPost: jest.fn((id: string) =>
+      Promise.resolve(id === '1' ? mockPost : null),
+    ),
+    createPost: jest.fn((post: IPosts) =>
+      Promise.resolve({ ...post, id: '2' }),
+    ),
     updatePost: jest.fn((id: string, title: string, content: string) =>
-      Promise.resolve(id === '1' ? { ...mockPost, title, content } : null)
+      Promise.resolve(id === '1' ? { ...mockPost, title, content } : null),
     ),
     deletePost: jest.fn(() => Promise.resolve()),
     searchPosts: jest.fn((query: string) =>
-      Promise.resolve(query === 'Test' ? [mockPost] : [])
+      Promise.resolve(query === 'Test' ? [mockPost] : []),
     ),
   };
 
@@ -70,24 +74,48 @@ describe('PostsService', () => {
   describe('createPost', () => {
     it('should create a new post', async () => {
       const newPost: IPosts = { title: 'New Post', content: 'New content' };
+
       const result = await service.createPost(newPost);
-      expect(result).toEqual({ ...newPost, id: '2' });
-      expect(repository.createPost).toHaveBeenCalledWith(newPost);
+
+      expect(result).toEqual({
+        ...newPost,
+        id: '2',
+        createdAt: expect.any(String),
+      });
+      expect(repository.createPost).toHaveBeenCalledWith({
+        ...newPost,
+        createdAt: expect.any(String),
+      });
     });
   });
 
   describe('updatePost', () => {
     it('should update an existing post', async () => {
-      const updatedPost = { title: 'Updated Title', content: 'Updated Content' };
-      const result = await service.updatePost('1', updatedPost.title, updatedPost.content);
+      const updatedPost = {
+        title: 'Updated Title',
+        content: 'Updated Content',
+      };
+      const result = await service.updatePost(
+        '1',
+        updatedPost.title,
+        updatedPost.content,
+      );
       expect(result).toEqual({ ...mockPost, ...updatedPost });
-      expect(repository.updatePost).toHaveBeenCalledWith('1', updatedPost.title, updatedPost.content);
+      expect(repository.updatePost).toHaveBeenCalledWith(
+        '1',
+        updatedPost.title,
+        updatedPost.content,
+      );
     });
 
     it('should return null if post not found for update', async () => {
       const result = await service.updatePost('99', 'Title', 'Content');
       expect(result).toBeNull();
-      expect(repository.updatePost).toHaveBeenCalledWith('99', 'Title', 'Content');
+      expect(repository.updatePost).toHaveBeenCalledWith(
+        '99',
+        'Title',
+        'Content',
+      );
     });
   });
 
