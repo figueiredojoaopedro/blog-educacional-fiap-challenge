@@ -1,4 +1,4 @@
-name: CI/CD with Docker Compose
+name: CI with Docker
 
 on:
   push:
@@ -17,16 +17,25 @@ jobs:
       - name: Set up Docker
         uses: docker/setup-buildx-action@v3
 
-      - name: Build containers
-        run: docker compose build
+      - name: Start MongoDB container
+        run: |
+          docker network create blog-network
+          docker run -d --name mongo --network blog-network -p 27017:27017 mongo:latest
 
-      - name: Start containers
-        run: docker compose up -d
+      - name: Build builder image
+        run: docker build --target builder -t blog-app-builder .
 
       - name: Run tests
-        run: docker compose exec -T app npm test
-        # change npm test if your project uses something else
+        run: >
+          docker run --network blog-network
+          -e MONGODB_URI=mongodb://mongo:27017/blog
+          blog-app-builder npm test
 
-      - name: Stop containers
+      - name: Build production image
+        run: docker build -t blog-app .
+
+      - name: Stop MongoDB container
         if: always()
-        run: docker compose down
+        run: |
+          docker rm -f mongo
+          docker network rm blog-network
