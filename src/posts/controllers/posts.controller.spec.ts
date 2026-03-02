@@ -5,6 +5,8 @@ import { NotFoundException } from '@nestjs/common';
 import { CreatePostDto } from '../dto/create-post.dto';
 import { UpdatePostDto } from '../dto/update-post.dto';
 import { IPosts } from '../schemas/models/posts.interface';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { ExecutionContext } from '@nestjs/common';
 
 describe('PostsController', () => {
   let controller: PostsController;
@@ -14,7 +16,7 @@ describe('PostsController', () => {
     id: '1',
     title: 'Test Post',
     content: 'This is a test post content',
-    author: 'Test Author',
+    author: 'test@example.com',
   };
 
   const mockPostsService = {
@@ -30,6 +32,10 @@ describe('PostsController', () => {
     ),
   };
 
+  const mockJwtAuthGuard = {
+    canActivate: jest.fn((context: ExecutionContext) => true),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [PostsController],
@@ -39,7 +45,10 @@ describe('PostsController', () => {
           useValue: mockPostsService,
         },
       ],
-    }).compile();
+    })
+      .overrideGuard(JwtAuthGuard)
+      .useValue(mockJwtAuthGuard)
+      .compile();
 
     controller = module.get<PostsController>(PostsController);
     service = module.get<PostsService>(PostsService);
@@ -80,10 +89,11 @@ describe('PostsController', () => {
 
   describe('createPost', () => {
     it('should create a new post', async () => {
-      const createDto: CreatePostDto = { title: 'New Post', content: 'New content', author: 'New Author' };
-      const result = await controller.createPost(createDto);
-      expect(result).toEqual({ ...createDto, id: '2' });
-      expect(service.createPost).toHaveBeenCalledWith(createDto);
+      const createDto: CreatePostDto = { title: 'New Post', content: 'New content' };
+      const user = { email: 'test@example.com' };
+      const result = await controller.createPost(createDto, user);
+      expect(result).toEqual({ ...createDto, author: user.email, id: '2' });
+      expect(service.createPost).toHaveBeenCalledWith({ ...createDto, author: user.email });
     });
   });
 

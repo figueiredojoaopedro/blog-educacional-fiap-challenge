@@ -7,7 +7,7 @@ export declare class PostsController {
     getPosts(limit?: number, page?: number): Promise<import("../schemas/models/posts.interface").IPosts[]>;
     searchPosts(query: string): Promise<import("../schemas/models/posts.interface").IPosts[]>;
     getPost(id: string): Promise<import("../schemas/models/posts.interface").IPosts>;
-    createPost(createPostDto: CreatePostDto): Promise<import("../schemas/models/posts.interface").IPosts>;
+    createPost(createPostDto: CreatePostDto, user: any): Promise<import("../schemas/models/posts.interface").IPosts>;
     updatePost(id: string, updatePostDto: UpdatePostDto): Promise<import("../schemas/models/posts.interface").IPosts>;
     deletePost(id: string): Promise<{
         message: string;

@@ -27,7 +27,10 @@ let PostsService = class PostsService {
         return this.postsRepository.getPost(postId);
     }
     async createPost(post) {
-        return this.postsRepository.createPost({ ...post, createdAt: new Date().toISOString() });
+        return this.postsRepository.createPost({
+            ...post,
+            createdAt: new Date().toISOString(),
+        });
     }
     async updatePost(postId, title, content) {
         return this.postsRepository.updatePost(postId, title, content);
