@@ -13,7 +13,10 @@ describe('AuthController', () => {
       Promise.resolve({ email: dto.email, name: dto.name, role: 'professor' }),
     ),
     login: jest.fn((dto: LoginDto) =>
-      Promise.resolve({ access_token: 'mockToken' }),
+      Promise.resolve({
+        access_token: 'mockToken',
+        user: { email: dto.email, name: 'Test', role: 'professor', _id: '1' },
+      }),
     ),
   };
 
@@ -53,7 +56,10 @@ describe('AuthController', () => {
     it('should login a user', async () => {
       const dto: LoginDto = { email: 'test@example.com', password: 'password' };
       const result = await controller.login(dto);
-      expect(result).toEqual({ access_token: 'mockToken' });
+      expect(result).toEqual({
+        access_token: 'mockToken',
+        user: { email: dto.email, name: 'Test', role: 'professor', _id: '1' },
+      });
       expect(service.login).toHaveBeenCalledWith(dto);
     });
   });
